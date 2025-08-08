@@ -1,3 +1,3 @@
-# Rubrica (Telephone Book)
+# Contacts
 
-Simple Telephone Book made using Java Swing.
+Simple app to manage contacts made using Java Swing.
