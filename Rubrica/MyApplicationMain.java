@@ -2,6 +2,10 @@ package Rubrica;
 
 public class MyApplicationMain{
     public static void main(String[] args) {
-       new MainFrame().setVisible(true); 
+       MainFrame finestra = new MainFrame();
+       finestra.setVisible(true);
+       EditorPersona editor = new EditorPersona(finestra);
+       editor.setVisible(true); 
+       
     }
 }
