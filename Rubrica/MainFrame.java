@@ -37,7 +37,9 @@ public class MainFrame extends JFrame{
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
         add(pulsantiPanel, BorderLayout.SOUTH);
-
+        
+        // Pressione pulsanti
+        
         
     }
 }
