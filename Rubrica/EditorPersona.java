@@ -1,6 +1,10 @@
 package Rubrica;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,6 +13,7 @@ class EditorPersona extends JDialog {
 
     private List<Persona> persone;
     private DefaultTableModel model;
+    private File filePersone;
     private JTextField nomeField = new JTextField(20);
     private JTextField cognomeField = new JTextField(20);
     private JTextField indirizzoField = new JTextField(20);
@@ -16,10 +21,11 @@ class EditorPersona extends JDialog {
     private JTextField etaField = new JTextField(20);
 
 
-    public EditorPersona(JFrame parent, List<Persona> persone, DefaultTableModel model) {
+    public EditorPersona(JFrame parent, List<Persona> persone, DefaultTableModel model, File filePersone) {
         super(parent, "Editor Persona", true);
         this.persone = persone;
         this.model = model;
+        this.filePersone = filePersone;
         setSize(300, 200);
         setLocationRelativeTo(parent);
        
@@ -78,6 +84,7 @@ class EditorPersona extends JDialog {
                 Persona p = new Persona(testoNome, testoCognome, testoIndirizzo, testoTelefono, Integer.parseInt(testoEta));
                 persone.add(p);
                 aggiornaTabella();
+                aggiornaFile();
                 dispose();
             }   
         });
@@ -99,6 +106,16 @@ class EditorPersona extends JDialog {
         model.setRowCount(0);
         for (Persona p : persone){
             model.addRow(new Object[]{p.getNome(), p.getCognome(), p.getTelefono()});
+        }
+    }
+
+    private void aggiornaFile(){
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filePersone))) {
+            for (Persona p : persone){
+                pw.println(p.getNome() + ";" + ";" + p.getCognome() + ";" + p.getIndirizzo() + ";" + p.getTelefono() + ";" + p.getEta());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

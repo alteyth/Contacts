@@ -35,7 +35,7 @@ public class MainFrame extends JFrame{
         };
 
         JScrollPane scrollPane = new JScrollPane(tabella);
-        editor = new EditorPersona(this, persone, model);
+        editor = new EditorPersona(this, persone, model, filePersone);
 
         //Pulsanti
         JButton nuovoBtn = new JButton("Nuovo");
