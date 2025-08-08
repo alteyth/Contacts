@@ -1,4 +1,4 @@
-package Rubrica;
+package RubricaJava;
 
 import java.awt.*;
 import java.io.File;
@@ -19,6 +19,8 @@ class EditorPersona extends JDialog {
     private JTextField indirizzoField = new JTextField(20);
     private JTextField telefonoField = new JTextField(20);
     private JTextField etaField = new JTextField(20);
+    private String operazione = "";
+    private int editIndex;
 
 
     public EditorPersona(JFrame parent, List<Persona> persone, DefaultTableModel model, File filePersone) {
@@ -26,7 +28,7 @@ class EditorPersona extends JDialog {
         this.persone = persone;
         this.model = model;
         this.filePersone = filePersone;
-        setSize(300, 200);
+        setSize(350, 200);
         setLocationRelativeTo(parent);
        
         // Pannello centrale con le etichette e i campi
@@ -78,15 +80,20 @@ class EditorPersona extends JDialog {
             String testoCognome = cognomeField.getText();
             String testoIndirizzo = indirizzoField.getText();
             String testoTelefono = telefonoField.getText();
-            String testoEta = etaField.getText();
+            String testoEta = etaField.getText();   
 
             if(!testoNome.equals("") && !testoCognome.equals("") && !testoIndirizzo.equals("") && !testoTelefono.equals("") && !testoEta.equals("")){
                 Persona p = new Persona(testoNome, testoCognome, testoIndirizzo, testoTelefono, Integer.parseInt(testoEta));
-                persone.add(p);
+                if(operazione.equals("add")){
+                    persone.add(p);
+                }
+                if(operazione.equals("put")){
+                    persone.set(editIndex, p);
+                }
                 aggiornaTabella();
                 aggiornaFile();
-                dispose();
-            }   
+            }
+            dispose();
         });
 
         // Aggiunta pannelli
@@ -112,10 +119,30 @@ class EditorPersona extends JDialog {
     private void aggiornaFile(){
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePersone))) {
             for (Persona p : persone){
-                pw.println(p.getNome() + ";" + ";" + p.getCognome() + ";" + p.getIndirizzo() + ";" + p.getTelefono() + ";" + p.getEta());
+                pw.println(p.getNome() + ";" + p.getCognome() + ";" + p.getIndirizzo() + ";" + p.getTelefono() + ";" + p.getEta());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void opAdd(){
+        operazione = "add";
+    }
+
+    public void opPut(){
+        operazione = "put";
+    }
+
+    public void setEditIndex(int index){
+        editIndex = index;
+    }
+
+    public void setEditFields(String nome, String cognome, String indirizzo, String telefono, String eta){
+        nomeField.setText(nome);
+        cognomeField.setText(cognome);
+        indirizzoField.setText(indirizzo);
+        telefonoField.setText(telefono);
+        etaField.setText(eta);
     }
 }

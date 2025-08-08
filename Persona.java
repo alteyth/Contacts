@@ -1,4 +1,4 @@
-package Rubrica;
+package RubricaJava;
 
 public class Persona {
     private String nome;

@@ -1,4 +1,4 @@
-package Rubrica;
+package RubricaJava;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,8 +17,8 @@ public class MainFrame extends JFrame{
     EditorPersona editor;
 
     public MainFrame(){
-        super("Rubrica Contatti");
-        setSize(800, 500);
+        super("Rubrica");
+        setSize(550, 500);
         setLocationRelativeTo(null);
         // setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,8 +57,37 @@ public class MainFrame extends JFrame{
         
         // Pressione pulsanti
        nuovoBtn.addActionListener((ActionEvent e) -> {
-           editor.pulisciFields(); 
-           editor.setVisible(true);
+            editor.opAdd();
+            editor.pulisciFields(); 
+            editor.setVisible(true);
+        });
+
+        modificaBtn.addActionListener((ActionEvent e) -> {
+            editor.opPut();
+            editor.pulisciFields();
+            int riga = tabella.getSelectedRow();
+            if(riga != -1){
+                editor.setEditIndex(riga);
+                Persona p = persone.get(riga);
+                editor.setEditFields(p.getNome(), p.getCognome(), p.getIndirizzo(), p.getTelefono(), String.valueOf(p.getEta()));
+                editor.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(this, "Per modificare un Contatto devi prima selezionarlo.", "Errore nella modifica", 0);
+            }
+        });
+
+        eliminaBtn.addActionListener((ActionEvent e) -> {
+            int riga = tabella.getSelectedRow();
+            if(riga != -1){
+                    int choice = JOptionPane.showConfirmDialog(this, "Sei sicuro di voler eliminare il contatto "+ "'" + persone.get(riga).getNome() + " " + persone.get(riga).getCognome() + "'?", "Attenzione", 0);
+                if(choice == 0){
+                    persone.remove(riga);
+                    aggiornaTabella();
+                    aggiornaFile();
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "Per eliminare un Contatto devi prima selezionarlo.", "Errore nell'eliminazione", 0);
+            }
         });
     }
 
@@ -84,6 +113,16 @@ public class MainFrame extends JFrame{
         model.setRowCount(0);
         for (Persona p : persone){
             model.addRow(new Object[]{p.getNome(), p.getCognome(), p.getTelefono()});
+        }
+    }
+
+    private void aggiornaFile(){
+        try (PrintWriter pw = new PrintWriter(new FileWriter(filePersone))) {
+            for (Persona p : persone){
+                pw.println(p.getNome() + ";" + p.getCognome() + ";" + p.getIndirizzo() + ";" + p.getTelefono() + ";" + p.getEta());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

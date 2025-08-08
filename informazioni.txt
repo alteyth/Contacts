@@ -1,2 +1,5 @@
-Simone;Seria;Via Genova 21;3286714347;24
-Nicola;Losito;Via del Cazzo 34;15;420
+Franco;Totti;Via Franceschi, 3;3204556797;21
+Silvio;Rossi;Via qualcosa;3221442445;50
+1;11;1;1;1
+1;1;1;1;1
+1;1;1;1;1
