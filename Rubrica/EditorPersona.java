@@ -1,62 +1,62 @@
 package Rubrica;
 
 import java.awt.*;
+import java.util.List;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 class EditorPersona extends JDialog {
 
+    private List<Persona> persone;
+    private DefaultTableModel model;
     private JTextField nomeField = new JTextField(20);
     private JTextField cognomeField = new JTextField(20);
+    private JTextField indirizzoField = new JTextField(20);
     private JTextField telefonoField = new JTextField(20);
+    private JTextField etaField = new JTextField(20);
 
-    public EditorPersona(JFrame parent) {
+
+    public EditorPersona(JFrame parent, List<Persona> persone, DefaultTableModel model) {
         super(parent, "Editor Persona", true);
+        this.persone = persone;
+        this.model = model;
         setSize(300, 200);
         setLocationRelativeTo(parent);
-        setLayout(new BorderLayout());
+       
+        // Pannello centrale con le etichette e i campi
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
 
-        // Campi
-        JPanel campiPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
-        gbc.anchor = GridBagConstraints.WEST;
+        nomeField = new JTextField(20);
+        cognomeField = new JTextField(20);
+        indirizzoField = new JTextField(20);
+        telefonoField = new JTextField(20);
+        etaField = new JTextField(20);
 
-        // Nome
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        campiPanel.add(new JLabel("Nome:"), gbc);
+        JLabel nomeLabel = new JLabel("Nome:");
+        nomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        inputPanel.add(nomeLabel);
+        inputPanel.add(nomeField);
 
-        gbc.gridx = 1;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        campiPanel.add(nomeField, gbc);
+        JLabel cognomeLabel = new JLabel("Cognome:");
+        cognomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        inputPanel.add(cognomeLabel);
+        inputPanel.add(cognomeField);
 
-        // Cognome
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        campiPanel.add(new JLabel("Cognome:"), gbc);
+        JLabel indirizzoLabel = new JLabel("Indirizzo:");
+        indirizzoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        inputPanel.add(indirizzoLabel);
+        inputPanel.add(indirizzoField);
 
-        gbc.gridx = 1;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        campiPanel.add(cognomeField, gbc);
+        JLabel telefonoLabel = new JLabel("Telefono:");
+        telefonoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        inputPanel.add(telefonoLabel);
+        inputPanel.add(telefonoField);
 
-        // Telefono
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        campiPanel.add(new JLabel("Telefono:"), gbc);
+        JLabel etaLabel = new JLabel("Età:");
+        etaLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        inputPanel.add(etaLabel);
+        inputPanel.add(etaField);
 
-        gbc.gridx = 1;
-        gbc.weightx = 1.0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        campiPanel.add(telefonoField, gbc);
-        
         // Pulsanti
         JPanel bottoniPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton salvaBtn = new JButton("Salva");
@@ -67,8 +67,38 @@ class EditorPersona extends JDialog {
         // Eventi
         annullaBtn.addActionListener(e -> dispose());
 
+        salvaBtn.addActionListener(e -> {
+            String testoNome = nomeField.getText();
+            String testoCognome = cognomeField.getText();
+            String testoIndirizzo = indirizzoField.getText();
+            String testoTelefono = telefonoField.getText();
+            String testoEta = etaField.getText();
+
+            if(!testoNome.equals("") && !testoCognome.equals("") && !testoIndirizzo.equals("") && !testoTelefono.equals("") && !testoEta.equals("")){
+                Persona p = new Persona(testoNome, testoCognome, testoIndirizzo, testoTelefono, Integer.parseInt(testoEta));
+                persone.add(p);
+                aggiornaTabella();
+                dispose();
+            }   
+        });
+
         // Aggiunta pannelli
-        add(campiPanel, BorderLayout.CENTER);
+        add(inputPanel, BorderLayout.CENTER);
         add(bottoniPanel, BorderLayout.SOUTH);
+    }
+
+    public void pulisciFields(){
+        nomeField.setText("");
+        cognomeField.setText("");
+        indirizzoField.setText("");
+        telefonoField.setText("");
+        etaField.setText("");
+    }
+
+    private void aggiornaTabella(){
+        model.setRowCount(0);
+        for (Persona p : persone){
+            model.addRow(new Object[]{p.getNome(), p.getCognome(), p.getTelefono()});
+        }
     }
 }
